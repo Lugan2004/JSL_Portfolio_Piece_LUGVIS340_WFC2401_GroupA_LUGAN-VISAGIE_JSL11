@@ -1,8 +1,8 @@
 // TASK: import helper functions from utils
-import { getTasks, createNewTask, patchTask, putTask,  } from "./taskFunctions.js";
+import { getTasks, createNewTask, patchTask, putTask,  } from "./utils/taskFunctions.js";
 // TASK: import initialData
-import { initialData } from "initialData.js";
-
+import { initialData } from "./initialData.js";
+console.log(initialData);
 
 /*************************************************************************************************************************************************
  * FIX BUGS!!!
@@ -24,7 +24,7 @@ const elements = {
   headerBoardName :  document.getElementById("header-board-name"),
   columnDivs : document.querySelectorAll(".column-div"),
   editTaskModal : document.getElementById("edit-task-modal"),
-  filterDiv : document.getElementById("filter-div"),
+  filterDiv : document.getElementById("filterDiv"),
   hideSideBarBtn : document.getElementById("hide-side-bar-btn"),
   showSideBarBtn : document.getElementById("show-side-bar-btn"),
   themeSwitch : document.getElementById("theme-switch"),
@@ -178,7 +178,7 @@ function setupEventListeners() {
   elements.showSideBarBtn.addEventListener('click', () => toggleSidebar(true));
 
   // Theme switch event listener
-  elements.themeSwitch.addEventListener('change', toggleTheme);
+  elements.themeSwitch.addEventListener('change', toggleTheme());
 
   // Show Add New Task Modal event listener
   elements.createNewTaskBtn.addEventListener('click', () => {
