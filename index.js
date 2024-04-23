@@ -238,7 +238,14 @@ function toggleSidebar(show) {
 }
 
 function toggleTheme() {
- 
+  const body = document.body;
+  body.classList.toggle('light-theme');
+
+  const isLightTheme = body.classList.contains('light-theme');
+  localStorage.setItem('light-theme', isLightTheme ? 'enabled' : 'disabled');
+ //Update the logo based on the theme
+ const logoImg = document.getElementById('logo');
+ logoImg.src = isLightTheme ? './assets/logo-dark.svg' : './assets/logo-light.svg';
 }
 
 
