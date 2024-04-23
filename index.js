@@ -18,6 +18,7 @@ function initializeData() {
   }
 }
 
+
 // TASK: Get elements from the DOM
 
 const elements = {
@@ -85,7 +86,7 @@ function filterAndDisplayTasksByBoard(boardName) {
   elements.columnDivs.forEach(column => {
     const status = column.getAttribute("data-status");
     // Reset column content while preserving the column title
-    column.innerHTML = `<div class="column-head-div">
+    column.textContent = `<div class="column-head-div">
                           <span class="dot" id="${status}-dot"></span>
                           <h4 class="columnHeader">${status.toUpperCase()}</h4>
                         </div>`;
@@ -207,8 +208,11 @@ function addTask(event) {
 
   //Assign user input to the task object
     const task = {
-      
+      title: document.getElementById('task-title').value,
+      description: document.getElementById('task-description').value,
+      dueDate: document.getElementById('task-due-date').value,
     };
+  
     const newTask = createNewTask(task);
     if (newTask) {
       addTaskToUI(newTask);
