@@ -225,7 +225,16 @@ function addTask(event) {
 
 
 function toggleSidebar(show) {
- 
+  const sideBar = document.getElementById('side-bar-div');
+  const showSideBarBtn = document.getElementById('show-side-bar-btn');
+  if (show) {
+    sideBar.classList.add('show-sidebar');
+    showSideBarBtn.style.display = 'none'; 
+} else{
+  sideBar.classList.remove('show-sidebar');
+  showSideBarBtn.style.display = 'block';
+  }
+  localStorage.setItem('showSideBar', show);
 }
 
 function toggleTheme() {
