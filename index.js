@@ -279,6 +279,12 @@ function saveTaskChanges(taskId) {
   
 
   // Create an object with the updated task details
+  const updatedTask = {
+    id: taskId,
+    title: newTitle,
+    description: newDesc,
+    status1: newStatus,
+  }
 
 
   // Update task using a hlper functoin
