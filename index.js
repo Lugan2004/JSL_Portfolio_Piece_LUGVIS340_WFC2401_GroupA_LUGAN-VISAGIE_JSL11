@@ -262,7 +262,10 @@ function openEditTaskModal(task) {
     deleteTask(task.id);
     toggleModal(false, elements.editTaskModal);
     refreshTasksUI();
-  })
+  });
+
+// Cancel task btn event listener
+  canscelEdtBtn.addEventListener('click', () => toggleModal(false, elements.editTaskModal));
 
 
   toggleModal(true, elements.editTaskModal); // Show the edit task modal
@@ -270,6 +273,9 @@ function openEditTaskModal(task) {
 
 function saveTaskChanges(taskId) {
   // Get new user inputs
+  const newTitle = document.getElementById('edit-task-title-input').value;
+  const newDesc = document.getElementById('edit-task-desc-input').value;
+  const newStatus = document.getElementById('edit-select-status').value;
   
 
   // Create an object with the updated task details
