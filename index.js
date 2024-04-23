@@ -1,5 +1,5 @@
 // TASK: import helper functions from utils
-import { getTasks, createNewTask, patchTask, putTask,  } from "./utils/taskFunctions.js";
+import { getTasks, createNewTask, patchTask, putTask, deleteTask,  } from "./utils/taskFunctions.js";
 // TASK: import initialData
 import { initialData } from "./initialData.js";
 console.log(initialData);
@@ -251,9 +251,18 @@ function openEditTaskModal(task) {
 
 
   // Call saveTaskChanges upon click of Save Changes button
+  saveChangesBtn.addEventListener('click', () => {
+    saveTaskChanges(task.id);
+  });
+
  
 
   // Delete task using a helper function and close the task modal
+  delTaskBtn.addEventListener('click', () => {
+    deleteTask(task.id);
+    toggleModal(false, elements.editTaskModal);
+    refreshTasksUI();
+  })
 
 
   toggleModal(true, elements.editTaskModal); // Show the edit task modal
