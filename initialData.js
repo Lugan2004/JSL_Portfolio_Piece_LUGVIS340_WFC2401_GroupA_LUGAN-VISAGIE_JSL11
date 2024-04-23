@@ -2,7 +2,7 @@ export const initialData = [
     {
       "id": 1,
       "title": "Launch Epic Career 🚀",
-      "description": "Create a killer Resume",
+      "description": "Lugan",
       "status": "todo",
       "board": "Launch Career"
     },
