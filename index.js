@@ -201,14 +201,17 @@ function toggleModal(show, modal = elements.modalWindow) {
  * COMPLETE FUNCTION CODE
  * **********************************************************************************************************************************************/
 
+// Function to handle the addition of a new task
 function addTask(event) {
-  event.preventDefault();
+  event.preventDefault(); // Prevent form submission
 
+  // Get input values from the form
   const titleInput = document.getElementById("title-input");
   const descInput = document.getElementById("desc-input");
   const statusSelect = document.getElementById("select-status");
   const filterDiv = elements.filterDiv;
 
+  // Create task object with input values
   const taskData = {
     title: titleInput.value,
     description: descInput.value,
@@ -216,41 +219,47 @@ function addTask(event) {
     board: activeBoard
   };
 
+  // Create new task and add to UI
   const newTask = createNewTask(taskData);
-
   if (newTask) {
     addTaskToUI(newTask);
     toggleModal(false);
     updateLocalStorageTasks(newTask);
     initialData.push(newTask);
     filterDiv.style.display = "none";
-    event.target.reset();
-    localStorage.setItem('tasks', JSON.stringify(initialData));
-    refreshTasksUI();
+    event.target.reset(); // Reset form fields
+    localStorage.setItem('tasks', JSON.stringify(initialData)); // Update local storage
+    refreshTasksUI(); // Refresh UI
   }
 }
+
+// Function to update local storage with new task
 function updateLocalStorageTasks(newTask) {
   let tasks = getTasks();
-  tasks.push(newTask);
-  localStorage.setItem('tasks', JSON.stringify(tasks));
+  tasks.push(newTask); // Add new task to tasks array
+  localStorage.setItem('tasks', JSON.stringify(tasks)); // Update local storage
 }
 
+// Function to toggle the sidebar visibility
 function toggleSidebar(show) {
   const sidebarElement = document.getElementById('side-bar-div');
   const showSideBarBtn = elements.showSideBarBtn;
 
+  // Show sidebar
   const showSidebar = () => {
     sidebarElement.style.display = 'block';
     showSideBarBtn.style.display = 'none';
-    localStorage.setItem('showSidebar', 'true');
+    localStorage.setItem('showSidebar', 'true'); // Update local storage
   };
 
+  // Hide sidebar
   const hideSidebar = () => {
     sidebarElement.style.display = 'none';
     showSideBarBtn.style.display = 'block';
-    localStorage.setItem('showSidebar', 'false');
+    localStorage.setItem('showSidebar', 'false'); // Update local storage
   };
 
+  // Toggle sidebar based on show parameter
   if (show) {
     showSidebar();
   } else {
@@ -258,42 +267,49 @@ function toggleSidebar(show) {
   }
 }
 
-// Function to toggle the theme and update the UI and localStorage
+// Function to toggle between light and dark themes
 function toggleTheme() {
+  // Get elements and theme from local storage
   const body = document.body;
   const logo = document.getElementById('logo');
   const themeSwitch = elements.themeSwitch;
+  const theme = localStorage.getItem('theme');
 
+  // Set light theme
   const setLightTheme = () => {
     body.classList.remove('dark-theme');
     body.classList.add('light-theme');
     logo.src = './assets/logo-light.svg';
-    localStorage.setItem('theme', 'light');
+    localStorage.setItem('theme', 'light'); // Update local storage
     themeSwitch.checked = false;
   };
 
+  // Set dark theme
   const setDarkTheme = () => {
     body.classList.remove('light-theme');
     body.classList.add('dark-theme');
     logo.src = './assets/logo-dark.svg';
-    localStorage.setItem('theme', 'dark');
+    localStorage.setItem('theme', 'dark'); // Update local storage
     themeSwitch.checked = true;
   };
 
-  if (body.classList.contains('light-theme')) {
-    setDarkTheme();
-  } else {
+  // Toggle theme based on current theme
+  if (theme === 'dark') {
     setLightTheme();
+  } else {
+    setDarkTheme();
   }
 }
 
-// Function to set the theme based on the preference stored in local storage
+// Function to set the theme on page load
 function setThemeOnLoad() {
+  // Get elements and theme from local storage
   const theme = localStorage.getItem('theme');
   const body = document.body;
   const logo = document.getElementById('logo');
   const themeSwitch = elements.themeSwitch;
 
+  // Set light theme
   const setLightTheme = () => {
     body.classList.remove('dark-theme');
     body.classList.add('light-theme');
@@ -301,6 +317,7 @@ function setThemeOnLoad() {
     themeSwitch.checked = false;
   };
 
+  // Set dark theme
   const setDarkTheme = () => {
     body.classList.remove('light-theme');
     body.classList.add('dark-theme');
@@ -308,6 +325,7 @@ function setThemeOnLoad() {
     themeSwitch.checked = true;
   };
 
+  // Set theme based on stored theme
   switch (theme) {
     case 'dark':
       setDarkTheme();
@@ -324,12 +342,12 @@ function setThemeOnLoad() {
 // Call setThemeOnLoad when the page loads
 window.onload = setThemeOnLoad;
 
-// Add an event listener to the theme switch button
+// Add event listener to theme switch button
 elements.themeSwitch.addEventListener('change', toggleTheme);
 
-
-
+// Function to open the edit task modal and handle saving or deleting changes
 function openEditTaskModal(task) {
+  // Get elements from the modal
   const titleInput = document.getElementById("edit-task-title-input");
   const descInput = document.getElementById("edit-task-desc-input");
   const statusSelect = document.getElementById("edit-select-status");
@@ -341,19 +359,21 @@ function openEditTaskModal(task) {
   descInput.value = task.description;
   statusSelect.value = task.status;
 
-  // Event handlers
+  // Event handlers for save and delete buttons
   saveTaskChangesBtn.addEventListener("click", handleSaveChanges);
   deleteTaskBtn.addEventListener("click", handleDeleteTask);
 
   // Show the edit task modal
   toggleModal(true, elements.editTaskModal);
 
+  // Function to handle saving changes
   function handleSaveChanges() {
     saveTaskChanges(task.id);
     refreshTasksUI();
     toggleModal(false, elements.editTaskModal);
   }
 
+  // Function to handle deleting task
   function handleDeleteTask() {
     deleteTask(task.id);
     refreshTasksUI();
@@ -361,13 +381,20 @@ function openEditTaskModal(task) {
   }
 }
 
+// Function to save changes made to a task
 function saveTaskChanges(taskId) {
+  // Get updated task details from modal inputs
   const updatedTitle = document.getElementById("edit-task-title-input").value;
   const updatedDesc = document.getElementById("edit-task-desc-input").value;
   const updatedStatus = document.getElementById("edit-select-status").value;
 
+  // Get tasks from local storage
   const tasks = getTasks();
+
+  // Find index of task with matching ID
   const taskIndex = tasks.findIndex(task => task.id === taskId);
+
+  // Create updated task object
   const updatedTask = {
     id: taskId,
     title: updatedTitle,
@@ -375,25 +402,27 @@ function saveTaskChanges(taskId) {
     status: updatedStatus
   };
 
+  // Update task in tasks array
   if (taskIndex !== -1) {
     tasks[taskIndex] = updatedTask;
-    putTask(taskId, tasks[taskIndex]);
+    putTask(taskId, tasks[taskIndex]); // Update task in database
   } else {
-    tasks.push(updatedTask);
-    patchTask(taskId, updatedTask);
+    tasks.push(updatedTask); // Add new task to tasks array
+    patchTask(taskId, updatedTask); // Add task to database
   }
 
+  // Update tasks in local storage
   localStorage.setItem("tasks", JSON.stringify(tasks));
-  refreshTasksUI();
-  toggleModal(false, elements.editTaskModal);
-  setThemeFromLocalStorage();
+  refreshTasksUI(); // Refresh UI
+  toggleModal(false, elements.editTaskModal); // Close modal
+  setThemeFromLocalStorage(); // Update theme from local storage
 }
 
-
-
+// Function to initialize page elements when DOM is fully loaded
 document.addEventListener('DOMContentLoaded', function() {
-  init(); // init is called after the DOM is fully loaded
+  init(); // Call init function after the DOM is fully loaded
 });
+
 
 function init() {
   setupEventListeners();
