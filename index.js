@@ -1,5 +1,5 @@
 // TASK: import helper functions from utils
-import { getTasks, createNewTask, patchTask, deleteTask, putTask } from './utils/taskFunctions.js'; // Or: import { getTasks, createNewTask, patchTask, deleteTask } from './utils/taskFunctions.js';
+import { getTasks, createNewTask, patchTask, deleteTask, putTask } from './utils/taskFunctions.js';
 // TASK: import initialData
 import { initialData } from './initialData.js';
 
@@ -9,8 +9,6 @@ import { initialData } from './initialData.js';
  * **********************************************************************************************************************************************/
 
 // Function checks if local storage already has data, if not it loads initialData to localStorage
-
-//localStorage.clear()
 function initializeData() {
   if (!localStorage.getItem('tasks')) {
     localStorage.setItem('tasks', JSON.stringify(initialData)); 
@@ -81,7 +79,7 @@ function displayBoards(boards) {
 // TASK: Fix Bugs
 
 function filterAndDisplayTasksByBoard(boardName) {
-  const filteredTasks = getTasks().filter(task => task.board === boardName);
+  const filteredTasks = getTasks().filter((task) => task.board === boardName);
 
   elements.columnDivs.forEach(column => {
     const status = column.dataset.status;
@@ -92,8 +90,7 @@ function filterAndDisplayTasksByBoard(boardName) {
 
     const tasksContainer = document.createElement("div");
     column.appendChild(tasksContainer);
-
-    filteredTasks.filter(task => task.status === status).forEach(task => {
+    filteredTasks.filter((task) => task.status === status).forEach(task => {
       const taskElement = document.createElement("div");
       taskElement.classList.add("task-div");
       taskElement.textContent = task.title;
