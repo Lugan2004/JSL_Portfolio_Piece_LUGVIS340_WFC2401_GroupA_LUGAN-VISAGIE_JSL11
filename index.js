@@ -45,7 +45,7 @@ function fetchAndDisplayBoardsAndTasks() {
   const boards = [...new Set(tasks.map(task => task.board).filter(Boolean))];
   displayBoards(boards);
   if (boards.length > 0) {
-    activeBoard = JSON.parse(localStorage.getItem("activeBoard")) || boards[0];
+    activeBoard = localStorage.getItem("activeBoard") || boards[0];
     elements.headerBoardName.textContent = activeBoard;
     styleActiveBoard(activeBoard);
     refreshTasksUI();
@@ -62,11 +62,11 @@ function displayBoards(boards) {
     const boardElement = document.createElement("button");
     boardElement.textContent = board;
     boardElement.classList.add("board-btn");
-    boardElement.addEventListener("click", () => { 
+    boardElement.addEventListener("click", () => {
       elements.headerBoardName.textContent = board;
       filterAndDisplayTasksByBoard(board);
-      activeBoard = board; 
-      localStorage.setItem("activeBoard", JSON.stringify(activeBoard));
+      activeBoard = board;
+      localStorage.setItem("activeBoard", activeBoard);
       styleActiveBoard(activeBoard);
     });
     boardsContainer.appendChild(boardElement);
@@ -89,7 +89,9 @@ function filterAndDisplayTasksByBoard(boardName) {
                         </div>`;
 
     const tasksContainer = document.createElement("div");
+    tasksContainer.classList.add('tasks-container');
     column.appendChild(tasksContainer);
+
     filteredTasks.filter((task) => task.status === status).forEach(task => {
       const taskElement = document.createElement("div");
       taskElement.classList.add("task-div");
@@ -126,12 +128,12 @@ function addTaskToUI(task) {
     return;
   }
 
-  // Create a unique tasks container for each task
-  const tasksContainer = document.createElement('div');
-  tasksContainer.className = 'tasks-container';
-  column.appendChild(tasksContainer);
+  const tasksContainer = column.querySelector('.tasks-container');
+  if (!tasksContainer) {
+    console.error(`Tasks container not found for status: ${task.status}`);
+    return;
+  }
 
-  // Check if the task already exists in the tasks container
   const existingTaskElement = tasksContainer.querySelector(`.task-div[data-task-id="${task.id}"]`);
   if (existingTaskElement) {
     console.warn(`Task with ID ${task.id} already exists in the tasks container.`);
@@ -140,10 +142,10 @@ function addTaskToUI(task) {
 
   const taskElement = document.createElement('div');
   taskElement.className = 'task-div';
-  taskElement.textContent = task.title; // Modify as needed
+  taskElement.textContent = task.title;
   taskElement.setAttribute('data-task-id', task.id);
   taskElement.addEventListener('click', () => openEditTaskModal(task));
-  
+
   tasksContainer.appendChild(taskElement);
 }
 
@@ -193,7 +195,7 @@ function setupEventListeners() {
 // Toggles tasks modal
 // Task: Fix bugs
 function toggleModal(show, modal = elements.modalWindow) {
-  modal.style.display = show ? 'block' : 'none'; 
+  modal.style.display = show ? 'block' : 'none';
 }
 
 
@@ -210,6 +212,7 @@ function addTask(event) {
   const descInput = document.getElementById("desc-input");
   const statusSelect = document.getElementById("select-status");
   const filterDiv = elements.filterDiv;
+  
 
   // Create task object with input values
   const taskData = {
@@ -399,6 +402,7 @@ function saveTaskChanges(taskId) {
     id: taskId,
     title: updatedTitle,
     description: updatedDesc,
+    board:activeBoard,
     status: updatedStatus
   };
 
@@ -418,15 +422,13 @@ function saveTaskChanges(taskId) {
   setThemeFromLocalStorage(); // Update theme from local storage
 }
 
-// Function to initialize page elements when DOM is fully loaded
 document.addEventListener('DOMContentLoaded', function() {
   init(); // Call init function after the DOM is fully loaded
 });
 
-
 function init() {
   setupEventListeners();
-  const showSidebar = localStorage.getItem('showSideBar') === 'true';
+  const showSidebar = localStorage.getItem('showSidebar') === 'true';
   toggleSidebar(showSidebar);
   const isLightTheme = localStorage.getItem('light-theme') === 'enabled';
   document.body.classList.toggle('light-theme', isLightTheme);
